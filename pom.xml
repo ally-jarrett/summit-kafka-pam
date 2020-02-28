@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.redhat.summit</groupId>
@@ -9,11 +8,25 @@
     <name>Fraud Detection, CN Case Management, Kafka and Decision Modelling</name>
 
     <modules>
-        <module>fraud-detection-model</module>
+        <module>fraud-detection-quarkus</module>
         <module>fuse-kafka-streams</module>
     </modules>
-
-    <repositories>
+    
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.redhat.summit</groupId>
+                <artifactId>fraud-detection-model</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.redhat.summit</groupId>
+                <artifactId>fraud-detection-quarkus</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <!-- <repositories>
         <repository>
             <id>redhat-ga-repository</id>
             <url>https://maven.repository.redhat.com/ga</url>
@@ -48,6 +61,6 @@
                 <enabled>false</enabled>
             </snapshots>
         </pluginRepository>
-    </pluginRepositories>
+    </pluginRepositories> -->
 
 </project>
