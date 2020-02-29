@@ -1,7 +1,0 @@
-= uki-pam-summit
-
-Proactive Fraud Detection with Cloud Native Case Management, Kafka and Decision Modelling
-
-    mvn clean install
-
-    oc process -f .openshiftio/application.yaml | oc create -f -

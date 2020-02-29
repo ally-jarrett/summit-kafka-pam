@@ -1,33 +1,40 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<?xml version="1.0" ?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.redhat.summit</groupId>
-    <artifactId>fraud-detection-pam-kafka</artifactId>
-    <packaging>pom</packaging>
-    <version>1.0.0-SNAPSHOT</version>
-    <name>Fraud Detection, CN Case Management, Kafka and Decision Modelling</name>
+  <groupId>com.redhat.summit</groupId>
+  <artifactId>fraud-detection-pam-kafka</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
 
-    <modules>
-        <module>fraud-detection-quarkus</module>
-        <module>fuse-kafka-streams</module>
-    </modules>
-    
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.redhat.summit</groupId>
-                <artifactId>fraud-detection-model</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.redhat.summit</groupId>
-                <artifactId>fraud-detection-quarkus</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-    
-    <profiles>
+  <packaging>pom</packaging>
+
+  <modules>
+    <module>fraud-detection-pam-kafka-model</module>
+    <module>fraud-detection-pam-kafka-producer</module>
+    <module>fraud-detection-pam-kafka-aggregator</module>
+  </modules>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.redhat.summit</groupId>
+        <artifactId>fraud-detection-pam-kafka-producer</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.redhat.summit</groupId>
+        <artifactId>fraud-detection-pam-kafka-aggregator</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.redhat.summit</groupId>
+        <artifactId>fraud-detection-pam-kafka-model</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <profiles>
     <profile>
       <id>local</id>
       <activation>
