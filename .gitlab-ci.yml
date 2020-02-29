@@ -4,10 +4,19 @@ cache:
   paths:
     - .m2/repository/
 
+before_script:
+  - apt-get update -qq
+  - apt-get install -y -qq build-essential libz-dev zlib1g-dev
+
 build:
   stage: build
   script:
+    - chmod +x install-graal.sh && ./install-graal.sh jdk8
+    - export GRAALVM_HOME=${CI_PROJECT_DIR}/graalvm-ce-java8-19.3.1
     - mvn clean install
+    - mvn clean install -P native -f fraud-detection-pam-kafka-model/pom.xml
+    - mvn clean install -P native -f fraud-detection-pam-kafka-aggregator/pom.xml
+    - mvn clean install -P native -f fraud-detection-pam-kafka-producer/pom.xml
 
 staging:
   stage: deploy
