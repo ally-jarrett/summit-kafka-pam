@@ -13,9 +13,9 @@
   <packaging>pom</packaging>
 
   <modules>
+    <module>model</module>
     <module>producer</module>
     <module>aggregator</module>
-    <module>model</module>
   </modules>
   
   <dependencyManagement>
