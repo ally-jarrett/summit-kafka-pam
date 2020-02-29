@@ -1,0 +1,16 @@
+image: maven:latest
+
+cache:
+  paths:
+    - .m2/repository/
+
+build:
+  stage: build
+  script:
+    - mvn clean install
+
+staging:
+  stage: deploy
+  trigger:
+    project: 2020-summit-labs/proactive-fraud-detection/proactive-fraud-detection-bucketrepo
+    branch: master
