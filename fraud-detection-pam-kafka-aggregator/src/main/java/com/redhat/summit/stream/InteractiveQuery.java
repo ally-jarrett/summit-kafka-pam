@@ -1,13 +1,6 @@
 package com.redhat.summit.stream;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
 import com.redhat.summit.model.GetAggregatedTransactionsResult;
-
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
@@ -16,9 +9,13 @@ import org.apache.kafka.streams.state.QueryableStoreTypes;
 import org.apache.kafka.streams.state.ReadOnlyKeyValueStore;
 import org.apache.kafka.streams.state.StreamsMetadata;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class InteractiveQuery {
@@ -31,6 +28,7 @@ public class InteractiveQuery {
     KafkaStreams streams;
 
     public List<PipelineMetadata> getMetaData() {
+        LOGGER.warn("Obtaining pipeline metadata");
         return streams.allMetadataForStore(CreditCardFraudTopology.TRANSACTIONS_STORE).stream()
                 .map(m -> new PipelineMetadata(m.hostInfo().host() + ":" + m.hostInfo().port(),
                         m.topicPartitions().stream().map(TopicPartition::toString).collect(Collectors.toSet())))
@@ -46,7 +44,7 @@ public class InteractiveQuery {
             return GetAggregatedTransactionsResult.notFound();
         } else if (metadata.host().equals(host)) {
             LOGGER.info("Found data for key {} locally", creditCardNumber);
-            Aggregation result = getWeatherStationStore().get(creditCardNumber);
+            Aggregation result = getAggregatedCreditCardTx().get(creditCardNumber);
 
             if (result != null) {
                 LOGGER.info("Result {}", result.transactions);
@@ -61,7 +59,7 @@ public class InteractiveQuery {
         }
     }
 
-    private ReadOnlyKeyValueStore<String, Aggregation> getWeatherStationStore() {
+    private ReadOnlyKeyValueStore<String, Aggregation> getAggregatedCreditCardTx() {
         while (true) {
             try {
                 return streams.store(CreditCardFraudTopology.TRANSACTIONS_STORE, QueryableStoreTypes.keyValueStore());

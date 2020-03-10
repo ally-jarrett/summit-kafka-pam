@@ -1,150 +1,116 @@
 package com.redhat.summit;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
+import com.redhat.summit.model.CreditCardTransaction;
+import com.redhat.summit.model.TransactionEventConfiguration;
+import com.redhat.summit.util.KafkaUtils;
+import io.reactivex.Flowable;
+import io.smallrye.reactive.messaging.kafka.KafkaMessage;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.eclipse.microprofile.reactive.messaging.Outgoing;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.util.concurrent.*;
 
-import com.redhat.summit.model.CreditCardTransaction;
-
-import org.eclipse.microprofile.reactive.messaging.Outgoing;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import io.reactivex.Flowable;
-import io.smallrye.reactive.messaging.kafka.KafkaMessage;
-
+/**
+ * Credit Card Transaction Producer
+ */
+@Slf4j
 @ApplicationScoped
 public class KafkaProducer {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaProducer.class);
+    @Inject
+    KafkaUtils kafkaUtils;
 
-    private final List<CreditCard> creditCardRegistry = new ArrayList<>();
+    public static final String TRANSACTION_ENDPOINT = "transactions-topic";
 
-    private final Random rand = new Random();
-    
     @PostConstruct
     public void init() {
-        {
-            final Customer customer = new KafkaProducer.Customer("Claudio", "Luppi");
-            final CreditCard creditCard = new KafkaProducer.CreditCard("0000-0000-0000-0001", customer);
-            creditCardRegistry.add(creditCard);
-            LOGGER.info("Customer {} {} added to registry with credit card number {}", customer.getName(),
-                    customer.getSurname(), creditCard.getNumber());
-        }
-        {
-            final Customer customer = new KafkaProducer.Customer("Ally", "Jarret");
-            final CreditCard creditCard = new KafkaProducer.CreditCard("0000-0000-0000-0002", customer);
-            creditCardRegistry.add(creditCard);
-            LOGGER.info("Customer {} {} added to registry with credit card number {}", customer.getName(),
-                    customer.getSurname(), creditCard.getNumber());
-        }
-        {
-            final Customer customer = new KafkaProducer.Customer("Donato", "Marrazzo");
-            final CreditCard creditCard = new KafkaProducer.CreditCard("0000-0000-0000-0003", customer);
-            creditCardRegistry.add(creditCard);
-            LOGGER.info("Customer {} {} added to registry with credit card number {}", customer.getName(),
-                    customer.getSurname(), creditCard.getNumber());
-        }
-        {
-            final Customer customer = new KafkaProducer.Customer("Efstathios", "Rouvas");
-            final CreditCard creditCard = new KafkaProducer.CreditCard("0000-0000-0000-0004", customer);
-            creditCardRegistry.add(creditCard);
-            LOGGER.info("Customer {} {} added to registry with credit card number {}", customer.getName(),
-                    customer.getSurname(), creditCard.getNumber());
-        }
-        {
-            final Customer customer = new KafkaProducer.Customer("Gareth", "Healy");
-            final CreditCard creditCard = new KafkaProducer.CreditCard("0000-0000-0000-0005", customer);
-            creditCardRegistry.add(creditCard);
-            LOGGER.info("Customer {} {} added to registry with credit card number {}", customer.getName(),
-                    customer.getSurname(), creditCard.getNumber());
-        }
-        {
-            final Customer customer = new KafkaProducer.Customer("Paul", "Brown");
-            final CreditCard creditCard = new KafkaProducer.CreditCard("0000-0000-0000-0006", customer);
-            creditCardRegistry.add(creditCard);
-            LOGGER.info("Customer {} {} added to registry with credit card number {}", customer.getName(),
-                    customer.getSurname(), creditCard.getNumber());
-        }
-        {
-            final Customer customer = new KafkaProducer.Customer("Rachid", "Snoussi");
-            final CreditCard creditCard = new KafkaProducer.CreditCard("0000-0000-0000-0007", customer);
-            creditCardRegistry.add(creditCard);
-            LOGGER.info("Customer {} {} added to registry with credit card number {}", customer.getName(),
-                    customer.getSurname(), creditCard.getNumber());
-        }
+        this.generateGenericTransactions();
     }
 
-    @Outgoing("transactions-topic") 
-    public Flowable<KafkaMessage<String, CreditCardTransaction>> generate() {
-       return Flowable.interval(2, TimeUnit.SECONDS)
-        .onBackpressureDrop()
-        .map(tick -> {
-            return publish(newRandomTransaction(creditCardRegistry.get(rand.nextInt(creditCardRegistry.size()))));
+    private BlockingQueue<KafkaMessage<String, CreditCardTransaction>> messages = new LinkedBlockingQueue<>();
+
+    public void add(KafkaMessage<String, CreditCardTransaction> message) {
+        log.info("Adding new message to blocking queue: {}", message);
+        this.messages.add(message);
+    }
+
+    public BlockingQueue<KafkaMessage<String, CreditCardTransaction>> get() {
+        return this.messages;
+    }
+
+    /**
+     * Pull from BlockingQueue and send transaction to kafkaTopic
+     *
+     * @return
+     */
+    @Outgoing(TRANSACTION_ENDPOINT)
+    public CompletionStage<KafkaMessage<String, CreditCardTransaction>> send() {
+        return CompletableFuture.<KafkaMessage<String, CreditCardTransaction>>supplyAsync(() -> {
+            try {
+                KafkaMessage<String, CreditCardTransaction> message = messages.take();
+                log.info("Sending TX to Kafka Queue with Key {} and payload: {}", message.getKey(), message);
+                return message;
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         });
     }
 
-    private KafkaMessage<String, CreditCardTransaction> publish(CreditCardTransaction creditCardTransaction) {
-        return KafkaMessage.of(creditCardTransaction.getCardNumber(), creditCardTransaction);
+    /**
+     * Produce Base/Generic/Random Transactions every 500ms
+     *
+     * @return
+     */
+    public void generateGenericTransactions() {
+        Flowable.interval(500, TimeUnit.MILLISECONDS)
+                .onBackpressureDrop()
+                .doOnNext(tick -> this.add(kafkaUtils.publish(kafkaUtils.getRandomTransaction()))).subscribe();
     }
 
-    private CreditCardTransaction newRandomTransaction(CreditCard crediCard) {
-        final int max = 10000;
-        final int min = 1;
-        final CreditCardTransaction creditCardTransaction = new CreditCardTransaction();
-        creditCardTransaction.setCardNumber(crediCard.getNumber());
-        creditCardTransaction.setAmount(rand.nextInt((max - min) + 1) + min);
-        creditCardTransaction
-                .setCardHolderName(crediCard.getHolder().getName() + " " + crediCard.getHolder().getSurname());
-                creditCardTransaction.setDate(LocalDateTime.now());
-                creditCardTransaction.setTransactionReference(UUID.randomUUID().toString());
-        return creditCardTransaction;
+    /**
+     * Produce Custom Transactions for given TransactionEventConfiguration
+     *
+     * @return
+     */
+    // TODO : Fix Flowable to work with delay
+    public void injectCustomTransactions(TransactionEventConfiguration eventConfiguration) {
+        log.info("{} custom transactions received, processing at a rate of {}ms per message",
+                eventConfiguration.getCustomTransactions().size(), eventConfiguration.getIntervalInMs());
+        Flowable.range(1, eventConfiguration.getCustomTransactions().size())
+                .concatMap(i -> Flowable.just(i).delay(eventConfiguration.getIntervalInMs(), TimeUnit.MILLISECONDS))
+                .doOnNext(i -> {
+                    KafkaMessage<String, CreditCardTransaction> msg = kafkaUtils.publish(eventConfiguration.getCustomTransactions().get(i));
+                    log.info("Publishing Custom CC Transaction with key : {}", msg.getKey());
+                    this.add(msg);
+                });
     }
 
-    private class Customer {
+    /**
+     * Produce Custom Transactions for given TransactionEventConfiguration
+     *
+     * @return
+     */
+    public void injectCustomTransactionsTemp(TransactionEventConfiguration eventConfiguration) {
+        if (CollectionUtils.isNotEmpty(eventConfiguration.getCustomTransactions())) {
 
-        private final String name;
-
-        private final String surname;
-
-        public Customer(String name, String surname) {
-            this.name = name;
-            this.surname = surname;
+            // Run Async to not block calling thread
+            CompletableFuture.runAsync(() -> {
+                        eventConfiguration.getCustomTransactions().stream().forEach(tx -> {
+                            try {
+                                TimeUnit.MILLISECONDS.sleep(eventConfiguration.getIntervalInMs());
+                                KafkaMessage<String, CreditCardTransaction> msg = kafkaUtils.publish(tx);
+                                log.info("Publishing Custom CC Transaction with key : {}", msg.getKey());
+                                this.add(msg);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    }
+            );
         }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getSurname() {
-            return surname;
-        }
-    }
-
-    private class CreditCard {
-
-        private final String number;
-
-        private final Customer holder;
-
-        public CreditCard(String number, Customer holder) {
-            this.number = number;
-            this.holder = holder;
-        }
-
-        public String getNumber() {
-            return number;
-        }
-
-        public Customer getHolder() {
-            return holder;
-        }
-
     }
 }

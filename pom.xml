@@ -1,110 +1,131 @@
 <?xml version="1.0" ?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.redhat.summit</groupId>
-  <artifactId>fraud-detection-pam-kafka</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+    <groupId>com.redhat.summit</groupId>
+    <artifactId>fraud-detection-pam-kafka</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
 
-  <packaging>pom</packaging>
+    <packaging>pom</packaging>
 
-  <modules>
-    <module>fraud-detection-pam-kafka-model</module>
-    <module>fraud-detection-pam-kafka-producer</module>
-    <module>fraud-detection-pam-kafka-aggregator</module>
-  </modules>
+    <modules>
+        <module>fraud-detection-pam-kafka-model</module>
+        <module>fraud-detection-pam-kafka-producer</module>
+        <module>fraud-detection-pam-kafka-aggregator</module>
+    </modules>
 
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>com.redhat.summit</groupId>
-        <artifactId>fraud-detection-pam-kafka-producer</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.redhat.summit</groupId>
-        <artifactId>fraud-detection-pam-kafka-aggregator</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.redhat.summit</groupId>
-        <artifactId>fraud-detection-pam-kafka-model</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
 
-  <profiles>
-    <profile>
-      <id>local</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <pluginRepositories>
-        <pluginRepository>
-          <id>redhat-ga-repository</id>
-          <url>https://maven.repository.redhat.com/ga</url>
-          <releases />
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-        </pluginRepository>
-        <pluginRepository>
-          <id>redhat-ea-repository</id>
-          <url>https://maven.repository.redhat.com/earlyaccess/all</url>
-          <releases />
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-        </pluginRepository>
-      </pluginRepositories>
-      <repositories>
-        <repository>
-          <id>redhat-ga-repository</id>
-          <url>https://maven.repository.redhat.com/ga</url>
-          <releases />
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-        </repository>
-        <repository>
-          <id>redhat-ea-repository</id>
-          <url>https://maven.repository.redhat.com/earlyaccess/all</url>
-          <releases />
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-        </repository>
-      </repositories>
-    </profile>
-    <profile>
-      <id>oncluster</id>
-      <activation>
-        <property>
-          <name>env.KUBERNETES_SERVICE_HOST</name>
-        </property>
-      </activation>
-      <pluginRepositories>
-        <pluginRepository>
-          <id>bucketrepo</id>
-          <url>http://mavenrepo.codeready-workspaces.svc.cluster.local:8080/bucketrepo/</url>
-          <releases />
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-        </pluginRepository>
-      </pluginRepositories>
-      <repositories>
-        <repository>
-          <id>bucketrepo</id>
-          <url>http://mavenrepo.codeready-workspaces.svc.cluster.local:8080/bucketrepo/</url>
-          <releases />
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-        </repository>
-      </repositories>
-    </profile>
-  </profiles>
+        <!-- Core -->
+        <quarkus.version>1.2.1.Final</quarkus.version>
+
+        <!-- Utils -->
+        <lombok.version>1.18.8</lombok.version>
+        <json-simple.version>1.1.1</json-simple.version>
+        <commons.lang.version>3.9</commons.lang.version>
+        <commons.collection.version>4.4</commons.collection.version>
+        <commons.io.version>2.6</commons.io.version>
+
+        <!-- Plugins -->
+        <surefire-plugin.version>2.22.0</surefire-plugin.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.redhat.summit</groupId>
+                <artifactId>fraud-detection-pam-kafka-producer</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.redhat.summit</groupId>
+                <artifactId>fraud-detection-pam-kafka-aggregator</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.redhat.summit</groupId>
+                <artifactId>fraud-detection-pam-kafka-model</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <profiles>
+        <profile>
+            <id>local</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>redhat-ga-repository</id>
+                    <url>https://maven.repository.redhat.com/ga</url>
+                    <releases/>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </pluginRepository>
+                <pluginRepository>
+                    <id>redhat-ea-repository</id>
+                    <url>https://maven.repository.redhat.com/earlyaccess/all</url>
+                    <releases/>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </pluginRepository>
+            </pluginRepositories>
+            <repositories>
+                <repository>
+                    <id>redhat-ga-repository</id>
+                    <url>https://maven.repository.redhat.com/ga</url>
+                    <releases/>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </repository>
+                <repository>
+                    <id>redhat-ea-repository</id>
+                    <url>https://maven.repository.redhat.com/earlyaccess/all</url>
+                    <releases/>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+        </profile>
+        <profile>
+            <id>oncluster</id>
+            <activation>
+                <property>
+                    <name>env.KUBERNETES_SERVICE_HOST</name>
+                </property>
+            </activation>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>bucketrepo</id>
+                    <url>http://mavenrepo.codeready-workspaces.svc.cluster.local:8080/bucketrepo/</url>
+                    <releases/>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </pluginRepository>
+            </pluginRepositories>
+            <repositories>
+                <repository>
+                    <id>bucketrepo</id>
+                    <url>http://mavenrepo.codeready-workspaces.svc.cluster.local:8080/bucketrepo/</url>
+                    <releases/>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
 
 </project>

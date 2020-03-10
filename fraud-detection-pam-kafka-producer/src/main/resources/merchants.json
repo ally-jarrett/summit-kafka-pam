@@ -1,0 +1,252 @@
+[
+  {
+    "name": "ASOS",
+    "code": "AS01",
+    "authCode": "ASOS-1234"
+  },
+  {
+    "name": "Accessorize",
+    "code": "AC01",
+    "authCode": "ACC-1234"
+  },
+  {
+    "name": "ALDO",
+    "code": "AL01",
+    "authCode": "ALDO-1234"
+  },
+  {
+    "name": "Allsaints",
+    "code": "AS02",
+    "authCode": "ALLS-1234"
+  },
+  {
+    "name": "Ann Summers",
+    "code": "AS03",
+    "authCode": "ANS-1234"
+  },
+  {
+    "name": "Ben Sherman",
+    "code": "BS01",
+    "authCode": "BENS-1234"
+  },
+  {
+    "name": "Bluebella",
+    "code": "BB01",
+    "authCode": "BLUE-1234"
+  },
+  {
+    "name": "boohoo",
+    "code": "BH01",
+    "authCode": "BOO-1234"
+  },
+  {
+    "name": "boohooMAN",
+    "code": "BH02",
+    "authCode": "BOO-5678"
+  },
+  {
+    "name": "Boden",
+    "code": "BO01",
+    "authCode": "BOD-1234"
+  },
+  {
+    "name": "Bombinate",
+    "code": "BM01",
+    "authCode": "BOMB-1234"
+  },
+  {
+    "name": "Bondara",
+    "code": "BD01",
+    "authCode": "BOND-1234"
+  },
+  {
+    "name": "Bonmarche",
+    "code": "BM02",
+    "authCode": "BONM-1234"
+  },
+  {
+    "name": "Boux Avenue",
+    "code": "BA01",
+    "authCode": "BOUX-1234"
+  },
+  {
+    "name": "Brook Taverner",
+    "code": "BT01",
+    "authCode": "BROOK-1234"
+  },
+  {
+    "name": "Burton",
+    "code": "BR01",
+    "authCode": "BURT-1234"
+  },
+  {
+    "name": "Calzedonia",
+    "code": "CZ01",
+    "authCode": "CALZ-1234"
+  },
+  {
+    "name": "Cath Kidston",
+    "code": "CK01",
+    "authCode": "CATH-1234"
+  },
+  {
+    "name": "Charles & Keith",
+    "code": "CK02",
+    "authCode": "CHKE-1234"
+  },
+  {
+    "name": "Charles Tyrwhitt",
+    "code": "CT01",
+    "authCode": "TRYW-1234"
+  },
+  {
+    "name": "Charles Wilson",
+    "code": "CW01",
+    "authCode": "CHWI-1234"
+  },
+  {
+    "name": "Chums",
+    "code": "CH01",
+    "authCode": "CHUM-1234"
+  },
+  {
+    "name": "Circle Fashion",
+    "code": "CF01",
+    "authCode": "CIRC-1234"
+  },
+  {
+    "name": "Claire's",
+    "code": "CL01",
+    "authCode": "CLAIR-1234"
+  },
+  {
+    "name": "Clarks",
+    "code": "CL02",
+    "authCode": "CLARK-1234"
+  },
+  {
+    "name": "Dorothy Perkins",
+    "code": "DP01",
+    "authCode": "DOPE-1234"
+  },
+  {
+    "name": "Evans",
+    "code": "EV01",
+    "authCode": "EVAN-1234"
+  },
+  {
+    "name": "Fat Face",
+    "code": "FF01",
+    "authCode": "FATF-1234"
+  },
+  {
+    "name": "GAP",
+    "code": "GA01",
+    "authCode": "GAP-1234"
+  },
+  {
+    "name": "I Saw It First",
+    "code": "IS01",
+    "authCode": "ISIF-1234"
+  },
+  {
+    "name": "Joules",
+    "code": "JL01",
+    "authCode": "JOUL-1234"
+  },
+  {
+    "name": "In The Style",
+    "code": "IS02",
+    "authCode": "INTS-1234"
+  },
+  {
+    "name": "Laura Ashley",
+    "code": "LA01",
+    "authCode": "LAAS-1234"
+  },
+  {
+    "name": "Little Mistress",
+    "code": "LM01",
+    "authCode": "LILM-1234"
+  },
+  {
+    "name": "Missguided",
+    "code": "MG01",
+    "authCode": "MISSG-1234"
+  },
+  {
+    "name": "MissPap",
+    "code": "MP01",
+    "authCode": "MISSP-1234"
+  },
+  {
+    "name": "Miss Selfridge",
+    "code": "MS01",
+    "authCode": "MISSS-1234"
+  },
+  {
+    "name": "Nasty Gal",
+    "code": "NG01",
+    "authCode": "NASG-1234"
+  },
+  {
+    "name": "New Look",
+    "code": "NL01",
+    "authCode": "NEWL-1234"
+  },
+  {
+    "name": "NEXT",
+    "code": "NX01",
+    "authCode": "NEXT-1234"
+  },
+  {
+    "name": "Office",
+    "code": "OF01",
+    "authCode": "OFFI-1234"
+  },
+  {
+    "name": "PrettyLittleThing",
+    "code": "PL01",
+    "authCode": "PLTH-1234"
+  },
+  {
+    "name": "River Island",
+    "code": "RI01",
+    "authCode": "RIVI-1234"
+  },
+  {
+    "name": "Schuh",
+    "code": "SC01",
+    "authCode": "SCHU-1234"
+  },
+  {
+    "name": "Superdry",
+    "code": "SD01",
+    "authCode": "SUPD-1234"
+  },
+  {
+    "name": "Ted Baker",
+    "code": "TB01",
+    "authCode": "TEDB-1234"
+  },
+  {
+    "name": "Topman",
+    "code": "TM01",
+    "authCode": "TOPM-1234"
+  },
+  {
+    "name": "Urban Outfitters",
+    "code": "UO01",
+    "authCode": "URBO-1234"
+  },
+  {
+    "name": "Very.co.uk",
+    "code": "VR01",
+    "authCode": "VERY-1234"
+  },
+  {
+    "name": "Wallis",
+    "code": "WL01",
+    "authCode": "WALS-1234"
+  }
+]
