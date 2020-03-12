@@ -13,4 +13,6 @@ public class CreditCardAccount {
 
     private Customer customer;
     private Card card;
+    private boolean isBlocked;
+
 }

@@ -1,5 +1,6 @@
 package com.redhat.summit.stream;
 
+import com.redhat.summit.model.CreditCardAccount;
 import com.redhat.summit.model.GetAggregatedTransactionsResult;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.Serdes;
@@ -35,6 +36,30 @@ public class InteractiveQuery {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Check Card does not have a block due to Fraudulent Activity
+     *
+     * @param creditCardNumber
+     * @return
+     */
+    public boolean isCardBlockEnabled(String creditCardNumber) {
+        CreditCardAccount account = this.getBlockedCreditCardStore().get(creditCardNumber);
+        if (account == null) {
+            LOGGER.info("No Credit Account found in global KTable, no previous blocks placed on card");
+            return false;
+        } else {
+            LOGGER.info("Latest Account Details for card {} indicate isCardBlocked = {}", creditCardNumber, account.isBlocked());
+            return account.isBlocked();
+        }
+    }
+
+
+    /**
+     * Aggregate CardTransactions
+     *
+     * @param creditCardNumber
+     * @return
+     */
     public GetAggregatedTransactionsResult getAggregatedTransactions(String creditCardNumber) {
         final StreamsMetadata metadata = streams.metadataForKey(CreditCardFraudTopology.TRANSACTIONS_STORE,
                 creditCardNumber, Serdes.String().serializer());
@@ -63,6 +88,15 @@ public class InteractiveQuery {
         while (true) {
             try {
                 return streams.store(CreditCardFraudTopology.TRANSACTIONS_STORE, QueryableStoreTypes.keyValueStore());
+            } catch (InvalidStateStoreException e) {
+            }
+        }
+    }
+
+    private ReadOnlyKeyValueStore<String, CreditCardAccount> getBlockedCreditCardStore() {
+        while (true) {
+            try {
+                return streams.store(CreditCardFraudTopology.BLOCKED_CARD_STORE, QueryableStoreTypes.keyValueStore());
             } catch (InvalidStateStoreException e) {
             }
         }

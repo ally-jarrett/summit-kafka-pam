@@ -1,6 +1,7 @@
 package com.redhat.summit.test.util;
 
 import com.redhat.summit.model.*;
+import com.redhat.summit.serializers.AggregationDeserializer;
 import com.redhat.summit.serializers.CreditCardDeserializer;
 import io.quarkus.kafka.client.serialization.JsonbSerializer;
 import io.smallrye.reactive.messaging.kafka.KafkaMessage;
@@ -110,7 +111,7 @@ public class KafkaTestUtil {
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrap);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, CreditCardDeserializer.class.getName());
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, AggregationDeserializer.class.getName());
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true");
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         return props;
